@@ -1,8 +1,9 @@
 export interface Customer {
     id: number;
     name: string;
-    contact: string;
     email: string;
+    phone: string;
+    contact: string;
     address: string;
 }
 
@@ -19,7 +20,7 @@ export interface Item {
     name: string;
     description: string;
     price: number;
-    stock: number;
+    quantity: number;  // Changed from 'stock' to 'quantity'
 }
 
 export interface Purchase {
@@ -37,7 +38,7 @@ export interface Purchase {
     discount: number;
 }
 
-export interface Sale {
+export interface SalesEntry {  // Renamed from Sale to SalesEntry
     id: string;
     billNo: string;
     date: string;
@@ -62,6 +63,7 @@ export interface Receipt {
     amount: number;
     method: string;
     comments: string;
+    status: 'Pending' | 'Completed';
 }
 
 export interface Payment {
@@ -75,9 +77,16 @@ export interface Payment {
 export interface Expense {
     id: string;
     date: string;
+    transporter: string;
+    containerNo: string;
+    ctns: number;
+    rate: number;
     amount: number;
-    category: string;
+    paid: number;
+    balance: number;
+    status: string;
     comments: string;
+    discount: number;
 }
 
 export interface Journal {
@@ -85,6 +94,7 @@ export interface Journal {
     date: string;
     description: string;
     amount: number;
+    type: 'income' | 'expense';
 }
 
 export interface Transaction {
@@ -111,7 +121,7 @@ export interface AppState {
     suppliers: Supplier[];
     items: Item[];
     purchases: Purchase[];
-    sales: Sale[];
+    sales: SalesEntry[];
     receipts: Receipt[];
     payments: Payment[];
     expenses: Expense[];
@@ -133,8 +143,8 @@ export type AppAction =
     | { type: 'ADD_PURCHASE'; payload: Purchase }
     | { type: 'EDIT_PURCHASE'; payload: Purchase }
     | { type: 'DELETE_PURCHASE'; payload: string }
-    | { type: 'ADD_SALE'; payload: Sale }
-    | { type: 'EDIT_SALE'; payload: Sale }
+    | { type: 'ADD_SALE'; payload: SalesEntry }
+    | { type: 'EDIT_SALE'; payload: SalesEntry }
     | { type: 'DELETE_SALE'; payload: string }
     | { type: 'ADD_RECEIPT'; payload: Receipt }
     | { type: 'EDIT_RECEIPT'; payload: Receipt }
@@ -184,7 +194,7 @@ export const appReducer = (state: AppState, action: AppAction): AppState => {
                 ...state,
                 customers: state.customers.filter(customer => customer.id !== action.payload)
             };
-        // Add similar cases for other actions
+        // Similar cases for other entities
         default:
             return state;
     }

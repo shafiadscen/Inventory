@@ -4,12 +4,14 @@ import { Card, Grid, Typography } from '@mui/material';
 
 const Dashboard = () => {
     const { state } = useAppContext();
-    const { sales, purchases, stock, outstanding } = state;
+    const { sales, purchases, stockItems, transactions } = state;
 
     const totalSales = sales.reduce((acc, sale) => acc + sale.amount, 0);
     const totalPurchases = purchases.reduce((acc, purchase) => acc + purchase.amount, 0);
-    const totalStock = stock.reduce((acc, item) => acc + item.ctns, 0);
-    const totalOutstanding = outstanding.reduce((acc, item) => acc + item.balance, 0);
+    const totalStock = stockItems.reduce((acc, item) => acc + item.ctns, 0);
+    const totalOutstanding = transactions
+        .filter(transaction => transaction.type === 'expense')
+        .reduce((acc, transaction) => acc + transaction.balance, 0);
 
     return (
         <Grid container spacing={3}>

@@ -2,29 +2,30 @@ import React, { useContext } from 'react';
 import { AppContext } from '../../context/AppContext';
 import DataTable from '../Common/DataTable';
 import CustomerModal from './CustomerModal';
+import { Customer } from '../../context/types';
 
 const CustomerList = () => {
-    const { customers, addCustomer, editCustomer, deleteCustomer } = useContext(AppContext);
-    const [selectedCustomer, setSelectedCustomer] = React.useState(null);
+    const { state, dispatch } = useContext(AppContext);
+    const [selectedCustomer, setSelectedCustomer] = React.useState<Customer | null>(null);
     const [modalOpen, setModalOpen] = React.useState(false);
 
-    const handleAddEditCustomer = (customer) => {
+    const handleAddEditCustomer = (customer: Customer) => {
         if (selectedCustomer) {
-            editCustomer(customer);
+            dispatch({ type: 'EDIT_CUSTOMER', payload: customer });
         } else {
-            addCustomer(customer);
+            dispatch({ type: 'ADD_CUSTOMER', payload: customer });
         }
         setModalOpen(false);
         setSelectedCustomer(null);
     };
 
-    const handleEdit = (customer) => {
+    const handleEdit = (customer: Customer) => {
         setSelectedCustomer(customer);
         setModalOpen(true);
     };
 
-    const handleDelete = (id) => {
-        deleteCustomer(id);
+    const handleDelete = (id: number) => {
+        dispatch({ type: 'DELETE_CUSTOMER', payload: id });
     };
 
     const columns = [
@@ -34,7 +35,7 @@ const CustomerList = () => {
         {
             title: 'Actions',
             key: 'actions',
-            render: (text, record) => (
+            render: (_: unknown, record: Customer) => (
                 <>
                     <button onClick={() => handleEdit(record)}>Edit</button>
                     <button onClick={() => handleDelete(record.id)}>Delete</button>
@@ -47,7 +48,7 @@ const CustomerList = () => {
         <div>
             <h2>Customer List</h2>
             <button onClick={() => setModalOpen(true)}>Add Customer</button>
-            <DataTable data={customers} columns={columns} />
+            <DataTable data={state.customers} columns={columns} />
             {modalOpen && (
                 <CustomerModal
                     visible={modalOpen}
