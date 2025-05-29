@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { AppState, AppAction, initialState, appReducer } from './types';
 
-const AppContext = createContext<{ state: AppState; dispatch: React.Dispatch<AppAction> } | undefined>(undefined);
+export const AppContext = createContext<{
+    state: AppState;
+    dispatch: React.Dispatch<AppAction>;
+} | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(appReducer, initialState);
